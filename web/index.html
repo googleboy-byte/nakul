@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Code Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/javascript-hint.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/python-hint.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/xml-hint.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/css-hint.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.js"></script>
+</head>
+<body>
+    <div class="editor-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-icons">
+                <div class="icon active" title="Explorer" data-panel="explorer">
+                    <i class="fas fa-file-code"></i>
+                </div>
+                <div class="icon" title="Search" data-panel="search">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="icon" title="Source Control">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <div class="icon" title="Extensions">
+                    <i class="fas fa-puzzle-piece"></i>
+                </div>
+            </div>
+            <div class="sidebar-content">
+                <!-- Explorer Panel -->
+                <div class="explorer active">
+                    <div class="explorer-header">
+                        <span>EXPLORER</span>
+                        <div class="explorer-actions">
+                            <button id="open-folder" title="Open Folder">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                            <button id="new-folder" title="New Folder">
+                                <i class="fas fa-folder-plus"></i>
+                            </button>
+                            <button id="new-file" title="New File">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="file-tree"></div>
+                </div>
+
+                <!-- Search Panel -->
+                <div class="search-container">
+                    <div class="explorer-header">
+                        <span>SEARCH</span>
+                    </div>
+                    <div class="search-input-container">
+                        <input type="text" class="search-input" placeholder="Search for files..." id="search-input">
+                    </div>
+                    <div class="search-results" id="search-results"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resize Handle for Sidebar -->
+        <div class="resize-handle" id="sidebar-handle"></div>
+
+        <!-- Main Editor Area -->
+        <div class="main-content">
+            <!-- Tab Bar -->
+            <div class="tab-bar" id="tab-bar">
+                <div id="tabs-container"></div>
+                <button id="new-tab" title="New Tab">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <!-- Editor -->
+            <div id="editor-container">
+                <div id="editor"></div>
+                <div id="welcome-screen" class="welcome-screen">
+                    <h1>Welcome to Code Editor</h1>
+                    <div class="welcome-actions">
+                        <button id="welcome-open-folder">
+                            <i class="fas fa-folder-open"></i> Open Folder
+                        </button>
+                        <button id="welcome-new-file">
+                            <i class="fas fa-file"></i> New File
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resize Handle for AI Panel -->
+        <div class="resize-handle" id="ai-panel-handle"></div>
+
+        <!-- AI Assistant Panel -->
+        <div class="ai-panel">
+            <div class="ai-panel-header">
+                <span>AI Assistant</span>
+                <button id="toggle-ai-panel" title="Toggle AI Panel">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="ai-panel-tabs">
+                <div class="ai-tab active" data-tab="chat">
+                    <i class="fas fa-comments"></i> Chat
+                </div>
+                <div class="ai-tab" data-tab="build">
+                    <i class="fas fa-code"></i> Build
+                </div>
+            </div>
+            <div class="ai-panel-content">
+                <!-- Chat Tab -->
+                <div class="ai-tab-content active" id="chat-tab">
+                    <div class="ai-messages" id="ai-messages"></div>
+                    <div class="ai-input">
+                        <textarea id="ai-prompt" placeholder="Ask AI for help..."></textarea>
+                        <button id="send-ai-prompt">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Build Tab -->
+                <div class="ai-tab-content" id="build-tab">
+                    <div class="build-content">
+                        <div class="build-options">
+                            <div class="build-section">
+                                <h3>Project Analysis</h3>
+                                <button class="build-option">
+                                    <i class="fas fa-search"></i>
+                                    Analyze Code
+                                </button>
+                                <button class="build-option">
+                                    <i class="fas fa-bug"></i>
+                                    Find Issues
+                                </button>
+                            </div>
+                            <div class="build-section">
+                                <h3>Suggestions</h3>
+                                <button class="build-option">
+                                    <i class="fas fa-magic"></i>
+                                    Optimize Code
+                                </button>
+                                <button class="build-option">
+                                    <i class="fas fa-book"></i>
+                                    Generate Docs
+                                </button>
+                            </div>
+                        </div>
+                        <div class="build-chat">
+                            <div id="build-messages" class="build-messages"></div>
+                            <div class="build-input-container">
+                                <textarea 
+                                    id="build-input" 
+                                    class="build-input" 
+                                    placeholder="Type your request here..."
+                                    rows="3"
+                                ></textarea>
+                                <button id="build-submit" class="build-submit">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/script.js"></script>
+</body>
+</html> 
