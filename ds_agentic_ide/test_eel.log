@@ -1,0 +1,38 @@
+2025-01-29 10:46:45,792 - INFO - Starting Eel application...
+2025-01-29 10:46:45,879 - DEBUG - Initializing WebSocket
+2025-01-29 10:46:45,879 - DEBUG - Validating WebSocket request
+2025-01-29 10:46:45,882 - INFO - 127.0.0.1 - - [2025-01-29 10:46:45] "GET /index.html HTTP/1.1" 200 13340 0.003383
+2025-01-29 10:46:45,938 - DEBUG - Initializing WebSocket
+2025-01-29 10:46:45,940 - DEBUG - Validating WebSocket request
+2025-01-29 10:46:45,946 - INFO - 127.0.0.1 - - [2025-01-29 10:46:45] "GET /style.css HTTP/1.1" 200 22639 0.004512
+2025-01-29 10:46:45,948 - DEBUG - Initializing WebSocket
+2025-01-29 10:46:45,949 - DEBUG - Validating WebSocket request
+2025-01-29 10:46:45,952 - INFO - 127.0.0.1 - - [2025-01-29 10:46:45] "GET /eel.js HTTP/1.1" 200 6025 0.003818
+2025-01-29 10:46:45,952 - DEBUG - Initializing WebSocket
+2025-01-29 10:46:45,953 - DEBUG - Validating WebSocket request
+2025-01-29 10:46:45,955 - INFO - 127.0.0.1 - - [2025-01-29 10:46:45] "GET /script.js HTTP/1.1" 200 39483 0.002123
+2025-01-29 10:46:46,385 - DEBUG - Initializing WebSocket
+2025-01-29 10:46:46,385 - DEBUG - Validating WebSocket request
+2025-01-29 10:46:46,385 - DEBUG - Attempting to upgrade connection
+2025-01-29 10:46:46,386 - DEBUG - WebSocket request accepted, switching protocols
+2025-01-29 10:46:46,478 - DEBUG - Initializing WebSocket
+2025-01-29 10:46:46,479 - DEBUG - Validating WebSocket request
+2025-01-29 10:46:46,486 - INFO - 127.0.0.1 - - [2025-01-29 10:46:46] "GET /favicon.ico HTTP/1.1" 404 882 0.007315
+2025-01-29 10:47:04,529 - DEBUG - Closed WebSocket
+2025-01-29 10:47:04,529 - DEBUG - Failed to write closing frame -> closing socket
+2025-01-29 10:47:04,529 - DEBUG - Closed WebSocket
+2025-01-29 10:48:43,367 - INFO - Starting Eel application...
+2025-01-29 10:48:43,471 - DEBUG - Initializing WebSocket
+2025-01-29 10:48:43,476 - DEBUG - Validating WebSocket request
+2025-01-29 10:48:43,479 - INFO - 127.0.0.1 - - [2025-01-29 10:48:43] "GET /test.html HTTP/1.1" 200 1091 0.008316
+2025-01-29 10:48:43,514 - DEBUG - Initializing WebSocket
+2025-01-29 10:48:43,515 - DEBUG - Validating WebSocket request
+2025-01-29 10:48:43,517 - INFO - 127.0.0.1 - - [2025-01-29 10:48:43] "GET /eel.js HTTP/1.1" 200 6025 0.003223
+2025-01-29 10:48:43,970 - DEBUG - Initializing WebSocket
+2025-01-29 10:48:43,971 - DEBUG - Validating WebSocket request
+2025-01-29 10:48:43,971 - DEBUG - Attempting to upgrade connection
+2025-01-29 10:48:43,971 - DEBUG - WebSocket request accepted, switching protocols
+2025-01-29 10:48:45,362 - INFO - Backend received request with text: test input
+2025-01-29 10:48:52,448 - DEBUG - Closed WebSocket
+2025-01-29 10:48:52,448 - DEBUG - Failed to write closing frame -> closing socket
+2025-01-29 10:48:52,449 - DEBUG - Closed WebSocket

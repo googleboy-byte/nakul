@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Eel IDE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ext-language_tools.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ext-keybinding_menu.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-python.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-html.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/mode-css.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/snippets/javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/snippets/python.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/snippets/html.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/snippets/css.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/worker-javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/worker-html.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/worker-css.js"></script>
+    <script src="completion.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- No Workspace View -->
+    <div id="no-workspace" class="no-workspace-container">
+        <div class="no-workspace-content">
+            <h2>Welcome to Python Eel IDE</h2>
+            <p>Select a folder to get started</p>
+            <button onclick="selectWorkspace()" class="primary-button">
+                <i class="fas fa-folder-open"></i> Open Folder
+            </button>
+        </div>
+    </div>
+
+    <!-- Main IDE Container -->
+    <div id="ide-container" class="container" style="display: none;">
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+            <div class="menu-item">
+                File
+                <div class="menu-dropdown">
+                    <div class="menu-option" onclick="selectWorkspace()">
+                        <span>Open Folder</span>
+                        <span class="shortcut">Ctrl+K Ctrl+O</span>
+                    </div>
+                    <div class="menu-option" onclick="showCreateFileDialog()">
+                        <span>New File</span>
+                        <span class="shortcut">Ctrl+N</span>
+                    </div>
+                    <div class="menu-option" onclick="saveCurrentFile()">
+                        <span>Save</span>
+                        <span class="shortcut">Ctrl+S</span>
+                    </div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" onclick="closeCurrentTab()">
+                        <span>Close Editor</span>
+                        <span class="shortcut">Ctrl+W</span>
+                    </div>
+                    <div class="menu-option" onclick="closeAllTabs()">
+                        <span>Close All Editors</span>
+                        <span class="shortcut">Ctrl+K Ctrl+W</span>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item">
+                Edit
+                <div class="menu-dropdown">
+                    <div class="menu-option" onclick="editor.undo()">
+                        <span>Undo</span>
+                        <span class="shortcut">Ctrl+Z</span>
+                    </div>
+                    <div class="menu-option" onclick="editor.redo()">
+                        <span>Redo</span>
+                        <span class="shortcut">Ctrl+Y</span>
+                    </div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" onclick="editor.execCommand('cut')">
+                        <span>Cut</span>
+                        <span class="shortcut">Ctrl+X</span>
+                    </div>
+                    <div class="menu-option" onclick="editor.execCommand('copy')">
+                        <span>Copy</span>
+                        <span class="shortcut">Ctrl+C</span>
+                    </div>
+                    <div class="menu-option" onclick="editor.execCommand('paste')">
+                        <span>Paste</span>
+                        <span class="shortcut">Ctrl+V</span>
+                    </div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" onclick="editor.find()">
+                        <span>Find</span>
+                        <span class="shortcut">Ctrl+F</span>
+                    </div>
+                    <div class="menu-option" onclick="editor.findNext()">
+                        <span>Find Next</span>
+                        <span class="shortcut">F3</span>
+                    </div>
+                    <div class="menu-option" onclick="editor.replace()">
+                        <span>Replace</span>
+                        <span class="shortcut">Ctrl+H</span>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item">
+                Selection
+                <div class="menu-dropdown">
+                    <div class="menu-option" onclick="editor.selectAll()">
+                        <span>Select All</span>
+                        <span class="shortcut">Ctrl+A</span>
+                    </div>
+                    <div class="menu-option" onclick="editor.execCommand('expandtoline')">
+                        <span>Expand Line Selection</span>
+                        <span class="shortcut">Ctrl+L</span>
+                    </div>
+                    <div class="menu-option" onclick="editor.execCommand('duplicateSelection')">
+                        <span>Duplicate Selection</span>
+                        <span class="shortcut">Shift+Alt+↓</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left panel: File Explorer -->
+            <div class="panel file-explorer">
+                <div class="panel-header">
+                    <div class="workspace-selector" onclick="selectWorkspace()">
+                        <i class="fas fa-folder-open"></i>
+                        <span id="current-workspace">No Folder Selected</span>
+                    </div>
+                    <div class="file-actions">
+                        <button onclick="showCreateFileDialog()"><i class="fas fa-file-plus"></i></button>
+                        <button onclick="showCreateFolderDialog()"><i class="fas fa-folder-plus"></i></button>
+                        <button onclick="refreshFileTree()"><i class="fas fa-sync"></i></button>
+                    </div>
+                </div>
+                <div id="file-tree" class="panel-content"></div>
+            </div>
+
+            <!-- Resizer for left panel -->
+            <div class="resizer left-resizer"></div>
+
+            <!-- Middle panel: Editor -->
+            <div class="editor-container">
+                <div class="tab-bar" id="tab-bar">
+                    <!-- Tabs will be dynamically added here -->
+                </div>
+                <div id="editor" class="editor"></div>
+            </div>
+
+            <!-- Resizer for right panel -->
+            <div class="resizer right-resizer"></div>
+
+            <!-- Right panel: AI Help -->
+            <div class="panel ai-help">
+                <div class="panel-header">
+                    <h3>AI Assistant</h3>
+                </div>
+                <div class="panel-content">
+                    <div class="ai-tabs">
+                        <div class="ai-tab active" onclick="switchAiTab('chat')">Chat</div>
+                        <div class="ai-tab" onclick="switchAiTab('build')">Build</div>
+                    </div>
+                    <div class="ai-panel" id="ai-chat-panel">
+                        <div class="chat-header">
+                            <div class="chat-actions">
+                                <button onclick="newChat()" class="icon-button" title="New Chat">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button onclick="toggleChatHistory()" class="icon-button" title="Chat History">
+                                    <i class="fas fa-history"></i>
+                                </button>
+                                <div class="context-dropdown">
+                                    <button onclick="toggleContextFiles()" class="icon-button" title="Add Context Files">
+                                        <i class="fas fa-paperclip"></i>
+                                    </button>
+                                    <div class="context-dropdown-content" id="context-files-dropdown">
+                                        <div class="context-search">
+                                            <input type="text" id="context-search" placeholder="Search files...">
+                                        </div>
+                                        <div class="context-files-list" id="context-files-list">
+                                            <!-- Files will be listed here -->
+                                        </div>
+                                        <div class="context-files-active" id="context-files-active">
+                                            <h4>Active Context Files</h4>
+                                            <div class="active-files-list">
+                                                <!-- Active context files will be listed here -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-controls">
+                                <select id="model-selector" class="model-selector">
+                                    <option value="gemini">Gemini</option>
+                                    <option value="together">Together AI (Llama)</option>
+                                </select>
+                                <button onclick="sendChatMessage()" class="send-button">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chat-sidebar" id="chat-history-sidebar">
+                            <div class="sidebar-header">
+                                <h3>Chat History</h3>
+                                <button onclick="toggleChatHistory()" class="icon-button">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="chat-history-list" id="chat-history-list">
+                                <!-- Chat history items will be added here -->
+                            </div>
+                        </div>
+                        <div class="chat-container">
+                            <div class="active-context-files" id="active-context-files">
+                                <!-- Active context files will be shown here -->
+                            </div>
+                            <div class="chat-messages" id="chat-messages">
+                                <!-- Messages will be added here dynamically -->
+                            </div>
+                            <div class="chat-input">
+                                <textarea id="chat-input-text" placeholder="Type your message..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ai-build-panel" class="ai-panel">
+                        <div class="build-container">
+                            <div class="build-actions">
+                                <button class="primary-button" onclick="startBuild()">
+                                    <i class="fas fa-play"></i> Run
+                                </button>
+                                <button class="secondary-button" onclick="stopBuild()">
+                                    <i class="fas fa-stop"></i> Stop
+                                </button>
+                            </div>
+                            <div id="build-output" class="build-output"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span id="file-status" class="status-item">
+                    <i class="fas fa-check"></i> Saved
+                </span>
+                <span id="file-encoding" class="status-item">
+                    <i class="fas fa-globe"></i> UTF-8
+                </span>
+                <span id="file-type" class="status-item">
+                    <i class="fas fa-code"></i> Plain Text
+                </span>
+            </div>
+            <div class="status-right">
+                <span id="cursor-position" class="status-item">
+                    <i class="fas fa-map-marker-alt"></i> Ln 1, Col 1
+                </span>
+                <span id="indent-type" class="status-item">
+                    <i class="fas fa-indent"></i> Spaces: 4
+                </span>
+                <span id="preferences" class="status-item clickable" onclick="showPreferences()">
+                    <i class="fas fa-cog"></i> Preferences
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Switcher -->
+    <div id="tab-switcher" class="tab-switcher">
+        <div class="tab-switcher-header">Switch between tabs</div>
+        <div id="tab-switcher-list" class="tab-switcher-list">
+            <!-- Tab items will be added dynamically -->
+        </div>
+    </div>
+
+    <!-- Modal Dialog -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title"></h3>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="modal-input" placeholder="">
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal()" class="secondary-button">Cancel</button>
+                <button onclick="handleModalConfirm()" class="primary-button">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menus -->
+    <div id="file-context-menu" class="context-menu">
+        <div class="menu-item" onclick="openContextFile()">
+            <i class="fas fa-external-link-alt"></i> Open
+        </div>
+        <div class="menu-item" onclick="renameContextItem()">
+            <i class="fas fa-edit"></i> Rename
+        </div>
+        <div class="menu-item" onclick="copyContextPath()">
+            <i class="fas fa-copy"></i> Copy Path
+        </div>
+        <div class="menu-separator"></div>
+        <div class="menu-item delete" onclick="deleteContextItem()">
+            <i class="fas fa-trash"></i> Delete
+        </div>
+    </div>
+
+    <div id="folder-context-menu" class="context-menu">
+        <div class="menu-item" onclick="createFileInFolder()">
+            <i class="fas fa-file-plus"></i> New File
+        </div>
+        <div class="menu-item" onclick="createFolderInFolder()">
+            <i class="fas fa-folder-plus"></i> New Folder
+        </div>
+        <div class="menu-separator"></div>
+        <div class="menu-item" onclick="renameContextItem()">
+            <i class="fas fa-edit"></i> Rename
+        </div>
+        <div class="menu-item" onclick="copyContextPath()">
+            <i class="fas fa-copy"></i> Copy Path
+        </div>
+        <div class="menu-separator"></div>
+        <div class="menu-item delete" onclick="deleteContextItem()">
+            <i class="fas fa-trash"></i> Delete
+        </div>
+    </div>
+</body>
+</html> 

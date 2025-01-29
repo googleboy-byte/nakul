@@ -1,0 +1,1 @@
+gemini is taking quite some time when a context file is specified. can I have some logs in the python console for that please and a small loading animation in the frontend telling the user that either the response is loading or print an error in the chat if there is one
